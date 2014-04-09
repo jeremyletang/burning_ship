@@ -24,10 +24,15 @@ float *BurningShip::getBuf() { return this->buf; }
 void BurningShip::render() {
     Point c,p0,p;
     int current_iter = 0;
+    int i = 0;
+    int j = 0;
+    omp_set_num_threads(this->core);
 
-    #pragma omp parallel num_threads(lthis->core)
-    for (int i = 0; i < this->width; i++) {
-        for (int j = 0; j < this->height ; j++) {
+
+    #pragma omp parallel for private(j, current_iter, c, p0, p)
+    for (i = 0; i < this->width; i++) {
+        #pragma omp parallel for private(current_iter, c, p0, p)
+        for (j = 0; j < this->height ; j++) {
             p0.x = 0;
             p0.y = 0;
             c.x = this->center_x + this->divergence * this->dimension_x * (i / (double)this->width - 0.5);
@@ -36,9 +41,7 @@ void BurningShip::render() {
                 p.x = p0.x * p0.x - p0.y * p0.y - c.x;
                 p.y = 2 * fabs(p0.x * p0.y) - c.y;
                 p0 = p;
-                if (p.x * p.x + p.y * p.y > 5) {
-                    break;
-                }
+                if (p.x * p.x + p.y * p.y > 5) { break; }
             }
             if (current_iter == this->iter) {
                 this->buf[((this->height - j - 1) * this->width) + i] = 0;

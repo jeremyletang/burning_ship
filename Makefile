@@ -12,7 +12,8 @@ OBJS       = $(SRCS:.cpp=.o)
 CFLAGS     = $(INC)
 
 
-all: $(SRCS) $(BIN)
+all: 
+	g++ src/*.cpp -std=c++0x $(LIB) -o $(BIN)
 
 $(BIN): $(OBJS)
 	mkdir -p $(BIN_FOLDER)
