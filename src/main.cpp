@@ -135,7 +135,7 @@ void video_ship(Params params) {
     // use ffmpeg
     // ffmpeg -r 2 -i burning_ship_%02d.png  out.mp4
     std::stringstream ss;
-    ss << "ffmpeg -r 2 -i burning_ship_%0" << get_count_number(nb_image) << "d.png burning_video.mp4";
+    ss << "ffmpeg -r 10 -i burning_ship_%0" << get_count_number(nb_image) << "d.png burning_video.mp4";
     system(ss.str().c_str());
     delete configs_list;
 }
