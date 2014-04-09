@@ -1,6 +1,7 @@
 #include "includes/burning_ship.hpp"
 #include "includes/png_maker.hpp"
 #include "includes/params.hpp"
+#include "includes/chrono.hpp"
 
 #include <cmath>
 #include <list>
@@ -57,14 +58,24 @@ std::list<Config> *load_config(std::string filename) {
 
 void simple_ship(Params &params, std::string file_name) {
     std::string title = "Burning ship fractal";
+
+    //
+    Chrono chrono(true);
+    
     // calculate fractal
     BurningShip b_ship(params);
     b_ship.render();
 
+    // stop chrono
+    chrono.pause();
+
     // store in png
     PngMaker png;
     png.initialize(file_name, params.width, params.height, title);
-    png.output(b_ship.getBuf(), GreyScale);
+    png.output(b_ship.getBuf(), Color);
+
+    // print exec time
+    std::cout << "Temps d'execution = %f sec\n" << chrono.get() << std::endl;
 }
 
 // useful to accumulate 0 in the number of the file -> needed by ffmpeg
