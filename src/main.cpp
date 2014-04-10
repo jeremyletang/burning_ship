@@ -75,7 +75,7 @@ void simple_ship(Params &params, std::string file_name) {
     png.output(b_ship.getBuf(), Color);
 
     // print exec time
-    std::cout << "Temps d'execution = %f sec\n" << chrono.get() << std::endl;
+    std::cout << "Temps d'execution " << chrono.get() << "sec." << std::endl;
 }
 
 // useful to accumulate 0 in the number of the file -> needed by ffmpeg
@@ -92,7 +92,7 @@ std::string get_zeros(int cur_image, int nb_image) {
 
         int nb_zeros = ss_cur.str().size();
         std::string return_zeros;
-        while (nb_zeros != ss_nb.str().size()) {
+        while (nb_zeros != (int)ss_nb.str().size()) {
             nb_zeros += 1;
             return_zeros += "0";
         }
