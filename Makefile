@@ -3,12 +3,13 @@
 CC         = g++
 CFLAGS     = -c -Wall
 BIN        = $(BIN_FOLDER)/burning_ship
+# SRCS       = src/main.cpp
 SRCS       = $(wildcard src/*.cpp)
 INC        = -Iincludes
-LIB        = -lpng
+LIB        = -lpng -lm
 BIN_FOLDER = bin
 OBJS       = $(SRCS:.cpp=.o)
-CFLAGS     = $(INC)
+CFLAGS     = $(INC) -std=c++11
 
 
 all: $(SRCS) $(BIN)
