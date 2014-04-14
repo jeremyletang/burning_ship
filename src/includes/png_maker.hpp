@@ -4,7 +4,12 @@
 #include <string>
 #include <png.h>
 
-inline void setRGB(png_byte *ptr, float val);
+enum ColorMod {
+    GreyScale,
+    Color
+};
+
+inline void setRGB(png_byte *ptr, float val, ColorMod color);
 
 class PngMaker {
 private:
@@ -19,8 +24,8 @@ private:
 public:
     PngMaker();
     ~PngMaker();
-    int initialize(std::string file_name, int width, int height, std::string title);
-    void output(float *buffer);
+    int initialize(std::string &file_name, int width, int height, std::string &title);
+    void output(float *buffer, ColorMod mod);
 };
 
 #endif

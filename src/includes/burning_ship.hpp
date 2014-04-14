@@ -20,6 +20,8 @@ private:
     double center_y;
     double dimension_x;
     double dimension_y;
+    int divergence;
+    int core;
 
 public:
     BurningShip(Params &init_params);

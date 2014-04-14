@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cstdio>
+#include <algorithm>
 
 PngMaker::PngMaker() {}
 
@@ -12,7 +13,7 @@ PngMaker::~PngMaker() {
     if (row != NULL) free(row);
 }
 
-int PngMaker::initialize(std::string file_name, int width, int height, std::string title) {
+int PngMaker::initialize(std::string &file_name, int width, int height, std::string &title) {
     this->width = width;
     this->height = height;
 
@@ -46,7 +47,7 @@ int PngMaker::initialize(std::string file_name, int width, int height, std::stri
     return 0;
 }
 
-void PngMaker::output(float *buffer) {
+void PngMaker::output(float *buffer, ColorMod color) {
     png_init_io(this->png_ptr, this->fp);
 
     // Write header (8 bit colour depth)
@@ -70,7 +71,7 @@ void PngMaker::output(float *buffer) {
     int x, y;
     for (y=0 ; y<height ; y++) {
         for (x=0 ; x<width ; x++) {
-            setRGB(&(row[x*3]), buffer[y*width + x]);
+            setRGB(&(row[x*3]), buffer[y*width + x], color);
         }
         png_write_row(png_ptr, row);
     }
@@ -79,19 +80,30 @@ void PngMaker::output(float *buffer) {
     png_write_end(png_ptr, NULL);
 }
 
-inline void setRGB(png_byte *ptr, float val) {
-    int v = (int)(val * 767);
-    if (v < 0) v = 0;
-    if (v > 767) v = 767;
-    int offset = v % 256;
+// this->buf[((this->height - j -1) * this->width) + i] = 1 - (float)k / this->iter;
 
-    if (v<256) {
-        ptr[0] = 0; ptr[1] = 0; ptr[2] = offset;
+inline void setRGB(png_byte *ptr, float val, ColorMod color) {
+    if (color == GreyScale) {
+        if (val == 0) {
+            ptr[0] = 0; // green
+            ptr[1] = 0; // red
+            ptr[2] = 0; // blue
+        } else {
+            ptr[0] = 255 - (std::min((int)val, 255) + 20); // green
+            ptr[1] = 255 - (std::min((int)val, 255) + 20); // red
+            ptr[2] = 255 - (std::min((int)val, 255) + 20); // blue
+        }
+    } else {
+        if (val == 0) {
+            ptr[0] = 21; // green
+            ptr[1] = 70; // red
+            ptr[2] = 146 ; // blue
+        } else {
+            double coef = (double)(val * 100. / 255.) * 3;
+            ptr[0] = std::min(int(110 + coef * 7), 255); // green
+            ptr[1] = std::min(int(158 + (coef * 0.7)), 255); // red
+            ptr[2] = std::min(int(234 - (coef * 0.5)), 255); // blue
+        }
     }
-    else if (v<512) {
-        ptr[0] = 0; ptr[1] = offset; ptr[2] = 255-offset;
-    }
-    else {
-        ptr[0] = offset; ptr[1] = 255-offset; ptr[2] = 0;
-    }
+
 }

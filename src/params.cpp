@@ -53,10 +53,10 @@ bool Params::parseCmdLine(int ac, char **av) {
             if (i + 1 >= ac || i + 2 >= ac) { return this->printBadArgsCnt("-d", 2, (ac - 1) - i); }
             if (this->nextNotNumber(av[i + 1])) { return false; }
             i++;
-            this->dimension_x = atof(av[i]);
+            this->dimension_x = atof(av[i]) / 100;
             if (this->nextNotNumber(av[i + 1])) { return false; }
             i++;
-            this->dimension_y = atof(av[i]);
+            this->dimension_y = atof(av[i]) / 100;
         } else if (arg.compare("-s") == 0) {
             if (i + 1 >= ac || i + 2 >= ac) { return this->printBadArgsCnt("-s", 2, (ac - 1) - i); }
             if (this->nextNotNumber(av[i + 1])) { return false; }
